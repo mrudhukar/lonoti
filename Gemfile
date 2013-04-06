@@ -43,3 +43,4 @@ group :development, :test do
 end
 
 gem 'devise'
+gem 'exception_notification', :require => 'exception_notifier'
