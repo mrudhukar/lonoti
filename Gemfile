@@ -41,3 +41,5 @@ group :development, :test do
 #  gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'therubyracer'
 end
+
+gem 'devise'
