@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :devise_id
-  # attr_accessible :title, :body
+
+  has_many :user_locations, dependent: :destroy
 
   before_save :ensure_authentication_token
 end

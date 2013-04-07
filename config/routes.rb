@@ -47,6 +47,7 @@ Lonoti::Application.routes.draw do
   #     resources :products
   #   end
   namespace :api do
+    resources :locations, only: [:create]
     devise_for :users
   end
 

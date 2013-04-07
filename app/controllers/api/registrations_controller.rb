@@ -1,4 +1,4 @@
-class Api::RegistrationsController < Api::BaseController
+class Api::RegistrationsController < ApplicationController
 
   def create
     user = User.new(email: params[:email], password: params[:password], devise_id: params[:devise_id].presence)
@@ -6,7 +6,6 @@ class Api::RegistrationsController < Api::BaseController
       render json: {auth_token: user.authentication_token, email: user.email}, status: 201
       return
     else
-      warden.custom_failure!
       render json: user.errors, status: 422
     end
   end

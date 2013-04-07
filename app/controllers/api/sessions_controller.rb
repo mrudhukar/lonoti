@@ -1,6 +1,4 @@
-class Api::SessionsController < Api::BaseController
-  prepend_before_filter :require_no_authentication, only: [:create ]
-
+class Api::SessionsController < Devise::SessionsController
   before_filter :ensure_params_exist
  
   def create
@@ -9,7 +7,6 @@ class Api::SessionsController < Api::BaseController
     return invalid_login_attempt unless resource
  
     if resource.valid_password?(params[:password])
-      sign_in("user", resource)
       render json: {auth_token: resource.authentication_token, email: resource.email}
       return
     end

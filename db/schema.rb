@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130406165730) do
+ActiveRecord::Schema.define(:version => 20130407070410) do
+
+  create_table "user_locations", :force => true do |t|
+    t.integer  "user_id",    :null => false
+    t.float    "lat"
+    t.float    "lng"
+    t.datetime "sent_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_locations", ["user_id"], :name => "index_user_locations_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

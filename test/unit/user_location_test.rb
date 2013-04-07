@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::BaseControllerTest < ActionController::TestCase
+class UserLocationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
