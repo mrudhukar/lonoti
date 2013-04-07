@@ -1,3 +1,9 @@
+== Resources used
+http://jessewolgamott.com/blog/2012/01/19/the-one-with-a-json-api-login-using-devise/
+
+http://railscasts.com/episodes/352-securing-an-api
+
+
 == Welcome to Rails
 
 Rails is a web-application framework that includes everything needed to create
