@@ -1,7 +1,10 @@
-require 'test_helper'
+require_relative './../../test_helper.rb'
 
 class Api::RegistrationsControllerTest < ActionController::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  
+  def test_restrict_api_access
+    post :create
+    assert_response :unauthorized
+  end
+
 end
