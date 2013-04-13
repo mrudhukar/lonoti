@@ -1,7 +1,7 @@
 class Api::LocationsController < ApplicationController
+
   before_filter :authenticate_user_from_api
 
-  respond_to :json
   def create
     location = current_api_user.user_locations.new(lat: params[:lat].presence, lng: params[:lng].presence)
     location.sent_at = Time.at(params[:sent_at].presence.to_i) if params[:sent_at].present?

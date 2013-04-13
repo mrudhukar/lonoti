@@ -14,12 +14,12 @@
 ActiveRecord::Schema.define(:version => 20130413061801) do
 
   create_table "user_locations", :force => true do |t|
-    t.integer  "user_id",    :null => false
-    t.float    "lat"
-    t.float    "lng"
+    t.integer  "user_id",                                   :null => false
+    t.decimal  "lat",        :precision => 10, :scale => 8
+    t.decimal  "lng",        :precision => 11, :scale => 8
     t.datetime "sent_at"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
   end
 
   add_index "user_locations", ["user_id"], :name => "index_user_locations_on_user_id"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20130413061801) do
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.string   "devise_id"
-    t.string   "phone"
+    t.string   "phone_number"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

@@ -4,22 +4,22 @@ class Api::SessionsController < Devise::SessionsController
   def create
     build_resource
     resource = User.find_for_database_authentication(email: params[:email])
-    return invalid_login_attempt unless resource
  
-    if resource.valid_password?(params[:password])
+    if resource && resource.valid_password?(params[:password])
       render json: {auth_token: resource.authentication_token, email: resource.email}
-      return
+    else
+      return invalid_login_attempt
     end
-    invalid_login_attempt
   end
   
-  def destroy
-    sign_out(resource_name)
-  end
+  # def destroy
+  #   sign_out(resource_name)
+  # end
  
   protected
+
   def ensure_params_exist
-    return unless params[:email].blank? && params[:password].blank?
+    return unless params[:email].blank? || params[:password].blank?
     render json: {message: "missing user_login parameter"}, status: 422
   end
  
