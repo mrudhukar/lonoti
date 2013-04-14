@@ -45,3 +45,4 @@ end
 
 gem 'devise'
 gem 'exception_notification', :require => 'exception_notifier'
+gem 'geocoder'

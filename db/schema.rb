@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130413061801) do
+ActiveRecord::Schema.define(:version => 20130414054042) do
 
   create_table "user_locations", :force => true do |t|
     t.integer  "user_id",                                   :null => false
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20130413061801) do
     t.datetime "sent_at"
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
+    t.text     "address"
   end
 
   add_index "user_locations", ["user_id"], :name => "index_user_locations_on_user_id"

@@ -28,17 +28,18 @@ class Api::LocationsControllerTest < ActionController::TestCase
     t = Time.now
 
     assert_difference "UserLocation.count" do
-      post :create, lat: "23.013",lng: "123.013", sent_at: t.to_i.to_s, auth_token: users(:test_user).authentication_token
+      post :create, lat: "44.9817",lng: "-93.2783", sent_at: t.to_i.to_s, auth_token: users(:test_user).authentication_token
     end
 
     assert_response :success
 
     loc = UserLocation.last
 
-    assert_equal "123.013", loc.lng.to_s
-    assert_equal "23.013", loc.lat.to_s
+    assert_equal "-93.2783", loc.lng.to_s
+    assert_equal "44.9817", loc.lat.to_s
     assert_equal t.to_i, loc.sent_at.to_i
     assert_equal users(:test_user), loc.user
+    assert_equal "353 North 5th Street, Minneapolis, MN 55403, USA", loc.address
   end
 
 end
