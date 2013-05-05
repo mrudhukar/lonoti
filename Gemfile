@@ -38,7 +38,7 @@ gem 'jquery-rails'
 # gem 'debugger'
 group :development, :test do
 #  This has an issue with heroku
-#  gem 'ruby-debug19', :require => 'ruby-debug'
+ #gem 'debugger'
   gem 'therubyracer'
   gem "rails-erd"
 end

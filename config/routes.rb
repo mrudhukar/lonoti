@@ -48,6 +48,7 @@ Lonoti::Application.routes.draw do
   #   end
   namespace :api do
     resources :locations, only: [:create]
+    resources :events
     devise_for :users
   end
 

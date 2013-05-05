@@ -17,4 +17,14 @@ class ApplicationController < ActionController::Base
       render :json => {'error' => 'authentication error'}, :status => 401
     end
   end
+
+  def get_params_from_json
+    return nil if params[:data].blank?
+    begin
+      @decoded_params = ActiveSupport::JSON.decode(Base64.decode64(params[:data])).symbolize_keys
+    rescue
+      return nil
+    end
+    
+  end
 end

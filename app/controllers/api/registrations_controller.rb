@@ -4,6 +4,7 @@ class Api::RegistrationsController < ApplicationController
     user = User.new(email: params[:email], password: params[:password])
     user.phone_number = params[:phone_number].presence
     user.devise_id = params[:devise_id].presence
+    user.registration_id = params[:registration_id].presence
 
     if user.save
       render json: {auth_token: user.authentication_token, email: user.email}, status: 201
