@@ -105,17 +105,18 @@ class Api::EventsController < ApplicationController
       loc_params = @event_params[:location].symbolize_keys
       final_params[:distance_from_address] = loc_params.delete(:distance)
       final_params.merge!(loc_params)
-    else
-      @response_to_send = [{'error' => "invalid value for type"}, 422]
-      return
     end
 
     final_params.delete_if { |k, v| v.nil? }
 
-    if @event.update_attributes(final_params)
-      # if @event_params[:friends]
-      #   @event.event_users.build(@event_params[:friends])
-      # end
+    @event.attributes = final_params
+
+    #Intitate the call only if the event is valid
+    if @event.valid? && @event_params[:friends]
+      @event.update_and_build_event_users(@event_params[:friends])
+    end
+
+    if @event.save
       @response_to_send = [{event_id: @event.id}, 200]
     else
       @response_to_send = [@event.errors, 422]

@@ -231,17 +231,6 @@ class Api::EventsControllerTest < ActionController::TestCase
 ############################## Create End ###################################################  
 
 ############################## Update ################################################### 
-  def test_update_failure_invalid_type
-    params_json = create_base64encoded({action: Api::EventsController::Action::UPDATE, payload: {}, event_id: events(:test_time_event).id})
-
-    assert_no_difference "AbstractEvent.count" do
-      post :create, data: params_json, auth_token: users(:test_user).authentication_token
-    end 
-    assert_response 422
-
-    assert_equal "invalid value for type", json_response['error']
-  end
-
   def test_update_sucess_time_based
     event = events(:test_time_event)
     t = Time.now
@@ -265,6 +254,50 @@ class Api::EventsControllerTest < ActionController::TestCase
     assert_equal t.to_i, event.trigger_time.to_i
     assert_equal "0,1", event.repeats_on_week
     assert !event.send_location?
+  end
+
+  def test_update_sucess_time_based_with_few_params
+    event = events(:test_time_event)
+    t = Time.now
+    payload = {time: {datetime: t.to_i.to_s}}
+
+    assert_equal "Sample time message", event.message
+    assert_equal "Test time", event.title
+    assert (t.to_i != event.trigger_time)
+    assert_equal "1,2,3,4,5", event.repeats_on_week
+    assert event.send_location?
+
+    params_json = create_base64encoded({action: Api::EventsController::Action::UPDATE, payload: payload, event_id: event.id})
+    assert_no_difference "Event::TimeBased.count" do
+      post :create, data: params_json, auth_token: users(:test_user).authentication_token
+    end 
+    assert_response 200
+    assert_equal event.id, json_response["event_id"]
+    
+    assert_equal "Sample time message", event.reload.message
+    assert_equal "Test time", event.title
+    assert_equal t.to_i, event.trigger_time.to_i
+    assert_equal "1,2,3,4,5", event.repeats_on_week
+    assert event.send_location?
+  end
+
+  def test_update_sucess_time_based_with_friends
+    event = events(:test_time_event)
+    t = Time.now
+    payload = {friends: [{phone_number: "9177023915", email: "mrudhukar@chronus.com"}, {phone_number: "9704957756"}, {phone_number: "000"}]}
+
+    assert_equal ["9177023915", "8978381829"], event.event_users.collect(&:phone_number)
+    assert_equal ["mrudhu@gmail.com", nil], event.event_users.collect(&:email)
+
+    params_json = create_base64encoded({action: Api::EventsController::Action::UPDATE, payload: payload, event_id: event.id})
+    assert_difference "EventUser.count" do
+      post :create, data: params_json, auth_token: users(:test_user).authentication_token
+    end 
+    assert_response 200
+    assert_equal event.id, json_response["event_id"]
+
+    assert_equal ["9177023915", "9704957756", "000"], event.reload.event_users.collect(&:phone_number)
+    assert_equal ["mrudhukar@chronus.com", nil, nil], event.event_users.collect(&:email)
   end
 
   def test_update_sucess_location_based

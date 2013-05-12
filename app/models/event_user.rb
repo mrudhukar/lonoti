@@ -5,4 +5,6 @@ class EventUser < ActiveRecord::Base
   belongs_to :user
 
   validates :event, :phone_number, presence: true
+  validates :phone_number, uniqueness: {scope: :event_id }
+  validates :user_id, uniqueness: {scope: :event_id }, allow_nil: true
 end

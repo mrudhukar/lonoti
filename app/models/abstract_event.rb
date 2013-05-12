@@ -15,4 +15,23 @@ class AbstractEvent < ActiveRecord::Base
   validates :status, inclusion: {in: [State::ACTIVE, State::INACTIVE, State::ARCHIVED] }
 
   default_scope where("events.status != ?", State::ARCHIVED)
+
+  def update_and_build_event_users(friends)
+    new_phone_numbers = friends.collect{|n| n[:phone_number]}
+
+    self.event_users.each do |eu|
+      unless new_phone_numbers.include?(eu.phone_number)
+        eu.destroy
+      end
+    end
+
+    friends.each do |neu|
+      if eu = self.event_users.find_by_phone_number(neu[:phone_number])
+        eu.update_attributes(neu)
+      else
+        eventuser = self.event_users.build(neu)
+        eventuser.event = self
+      end
+    end
+  end
 end
