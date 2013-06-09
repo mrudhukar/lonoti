@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130414071249) do
+ActiveRecord::Schema.define(:version => 20130608051803) do
 
   create_table "event_users", :force => true do |t|
     t.integer  "user_id"
@@ -28,15 +28,22 @@ ActiveRecord::Schema.define(:version => 20130414071249) do
     t.text     "message"
     t.integer  "status",                                               :default => 0
     t.string   "type"
-    t.datetime "trigger_time"
+    t.datetime "trigger_date"
+    t.integer  "trigger_time"
     t.boolean  "send_location",                                        :default => false
-    t.string   "repeats_on_week"
+    t.integer  "repeats_on"
     t.decimal  "lat",                   :precision => 10, :scale => 8
     t.decimal  "lng",                   :precision => 11, :scale => 8
     t.text     "address"
     t.integer  "distance_from_address"
     t.datetime "created_at",                                                              :null => false
     t.datetime "updated_at",                                                              :null => false
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "event_user_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "user_locations", :force => true do |t|

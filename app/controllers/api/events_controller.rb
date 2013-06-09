@@ -63,7 +63,7 @@ class Api::EventsController < ApplicationController
     if @event_params[:type] == Type::TIME_BASED && @event_params[:time]
 
       time_params = @event_params[:time].symbolize_keys
-      time_params[:trigger_time] = Time.at(time_params.delete(:datetime).to_i) if time_params[:datetime].present?
+      time_params[:trigger_date] = Time.at(time_params.delete(:date_sec).to_i).beginning_of_day() if time_params[:date_sec].present?
       @event = current_api_user.time_events.new(time_params) 
 
     elsif @event_params[:type] == Type::LOCATION_BASED && @event_params[:location]
@@ -99,7 +99,7 @@ class Api::EventsController < ApplicationController
 
     if @event_params[:time]
       time_params = @event_params[:time].symbolize_keys
-      final_params[:trigger_time] = Time.at(time_params.delete(:datetime).to_i) if time_params[:datetime].present?
+      final_params[:trigger_date] = Time.at(time_params.delete(:date_sec).to_i).beginning_of_day() if time_params[:date_sec].present?
       final_params.merge!(time_params)
     elsif @event_params[:location]
       loc_params = @event_params[:location].symbolize_keys

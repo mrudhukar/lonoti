@@ -7,9 +7,10 @@ class CreateEvents < ActiveRecord::Migration
       t.integer :status, default: AbstractEvent::State::ACTIVE
       t.string :type
 
-      t.datetime :trigger_time
+      t.datetime :trigger_date
+      t.integer :trigger_time
       t.boolean :send_location, default: false
-      t.string :repeats_on_week
+      t.integer :repeats_on
       
       t.decimal :lat, precision: 10, scale: 8
       t.decimal :lng, precision: 11, scale: 8

@@ -6,7 +6,7 @@ class AbstractEvent < ActiveRecord::Base
     ARCHIVED = 2
   end
 
-  attr_accessible :title, :message, :trigger_time, :send_location, :repeats_on_week, :lat, :lng, :distance_from_address, :from_address
+  attr_accessible :title, :message
 
   belongs_to :user
   has_many :event_users, dependent: :destroy, foreign_key: :event_id
@@ -15,6 +15,7 @@ class AbstractEvent < ActiveRecord::Base
   validates :status, inclusion: {in: [State::ACTIVE, State::INACTIVE, State::ARCHIVED] }
 
   default_scope where("events.status != ?", State::ARCHIVED)
+  scope :active, where(status: State::ACTIVE)
 
   def update_and_build_event_users(friends)
     new_phone_numbers = friends.collect{|n| n[:phone_number]}
@@ -34,4 +35,5 @@ class AbstractEvent < ActiveRecord::Base
       end
     end
   end
+
 end

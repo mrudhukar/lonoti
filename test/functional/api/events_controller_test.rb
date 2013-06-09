@@ -148,7 +148,7 @@ class Api::EventsControllerTest < ActionController::TestCase
   end
 
   def test_create_failure_invalid_friends
-    payload = {type: Api::EventsController::Type::TIME_BASED, time: {datetime: Time.now.to_i.to_s}, title: "Title", message: "Sample Message"}
+    payload = {type: Api::EventsController::Type::TIME_BASED, time: {date_sec: Time.now.to_i.to_s, trigger_time: 300}, title: "Title", message: "Sample Message"}
     payload[:friends] = [{:phone_number => nil}]
     params_json = create_base64encoded({action: Api::EventsController::Action::CREATE, payload: payload})
 
@@ -165,8 +165,8 @@ class Api::EventsControllerTest < ActionController::TestCase
   end
 
   def test_create_success_time_based
-    t = Time.now
-    payload = {type: Api::EventsController::Type::TIME_BASED, time: {datetime: t.to_i.to_s, send_location: 1, repeats_on_week: "0,1"}, title: "Title", message: "Sample Message"}
+    t = Time.now.beginning_of_day()
+    payload = {type: Api::EventsController::Type::TIME_BASED, time: {date_sec: t.to_i.to_s, trigger_time: 300, send_location: 1, repeats_on_week: "0,1"}, title: "Title", message: "Sample Message"}
     payload[:friends] = [{phone_number: "9840463195", email: "mrudhu@gmail.com"}, {phone_number: "9177023195"}]
 
     params_json = create_base64encoded({action: Api::EventsController::Action::CREATE, payload: payload})
@@ -183,8 +183,9 @@ class Api::EventsControllerTest < ActionController::TestCase
     assert_equal users(:test_user), event.user
     assert_equal "Title", event.title
     assert_equal "Sample Message", event.message
-    assert_equal t.to_i, event.trigger_time.to_i
-    assert_equal "0,1", event.repeats_on_week
+    assert_equal t.to_i, event.trigger_date.to_i
+    assert_equal 300, event.trigger_time
+    assert_equal 96, event.repeats_on
     assert event.send_location?
 
     assert event.lat.nil?
@@ -215,7 +216,7 @@ class Api::EventsControllerTest < ActionController::TestCase
     assert_equal "Title", event.title
     assert_equal "Sample Message", event.message
     assert event.trigger_time.nil?
-    assert event.repeats_on_week.nil?
+    assert event.repeats_on.nil?
     assert !event.send_location?
 
     assert_equal "-93.2783", event.lng.to_s
@@ -234,12 +235,12 @@ class Api::EventsControllerTest < ActionController::TestCase
   def test_update_sucess_time_based
     event = events(:test_time_event)
     t = Time.now
-    payload = {time: {datetime: t.to_i.to_s, send_location: 0, repeats_on_week: "0,1"}, title: "Title", message: "Sample Message"}
+    payload = {time: {date_sec: t.to_i.to_s, trigger_time: 300, send_location: 0, repeats_on_week: "4,5,6"}, title: "Title", message: "Sample Message"}
 
     assert_equal "Sample time message", event.message
     assert_equal "Test time", event.title
     assert (t.to_i != event.trigger_time)
-    assert_equal "1,2,3,4,5", event.repeats_on_week
+    assert_equal 62, event.repeats_on
     assert event.send_location?
 
     params_json = create_base64encoded({action: Api::EventsController::Action::UPDATE, payload: payload, event_id: event.id})
@@ -251,20 +252,21 @@ class Api::EventsControllerTest < ActionController::TestCase
     
     assert_equal "Sample Message", event.reload.message
     assert_equal "Title", event.title
-    assert_equal t.to_i, event.trigger_time.to_i
-    assert_equal "0,1", event.repeats_on_week
+    assert_equal t.beginning_of_day.to_i, event.trigger_date.to_i
+    assert_equal 300, event.trigger_time
+    assert_equal 7, event.repeats_on
     assert !event.send_location?
   end
 
   def test_update_sucess_time_based_with_few_params
     event = events(:test_time_event)
     t = Time.now
-    payload = {time: {datetime: t.to_i.to_s}}
+    payload = {time: {date_sec: t.to_i.to_s, trigger_time: 300}}
 
     assert_equal "Sample time message", event.message
     assert_equal "Test time", event.title
-    assert (t.to_i != event.trigger_time)
-    assert_equal "1,2,3,4,5", event.repeats_on_week
+    assert (t.to_i != event.trigger_date)
+    assert_equal 62, event.repeats_on
     assert event.send_location?
 
     params_json = create_base64encoded({action: Api::EventsController::Action::UPDATE, payload: payload, event_id: event.id})
@@ -276,8 +278,8 @@ class Api::EventsControllerTest < ActionController::TestCase
     
     assert_equal "Sample time message", event.reload.message
     assert_equal "Test time", event.title
-    assert_equal t.to_i, event.trigger_time.to_i
-    assert_equal "1,2,3,4,5", event.repeats_on_week
+    assert_equal t.beginning_of_day.to_i, event.trigger_date.to_i
+    assert_equal 62, event.repeats_on
     assert event.send_location?
   end
 
