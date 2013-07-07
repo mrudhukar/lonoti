@@ -13,7 +13,7 @@ class UserLocation < ActiveRecord::Base
 
   after_create :send_event_notification
 
-  def send_event_notifications
+  def send_event_notification
     owner = self.user
     loc_events = owner.time_events.active.with_location.where(trigger_time: 5.minutes.ago..5.minutes.from_now).
     where("
