@@ -1,6 +1,4 @@
-https://travis-ci.org/mrudhukar/lonoti.png?branch=master
-"!https://travis-ci.org/mrudhukar/lonoti.png?branch=master!":https://travis-ci.org/mrudhukar/lonoti
-
+[![Build Status](https://travis-ci.org/mrudhukar/lonoti.png?branch=master)](https://travis-ci.org/mrudhukar/lonoti)
 
 == API Resources used
 
