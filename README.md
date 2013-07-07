@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/mrudhukar/lonoti.png?branch=master)](https://travis-ci.org/mrudhukar/lonoti)
+[![Coverage Status](https://coveralls.io/repos/mrudhukar/lonoti/badge.png)](https://coveralls.io/r/mrudhukar/lonoti)
+
 
 == API Resources used
 

@@ -1,5 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 ENV['MOBILE_APP_SECRET'] = "lonoti"
+require 'coveralls'
+Coveralls.wear!('rails')
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
