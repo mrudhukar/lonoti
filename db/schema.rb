@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130608051803) do
+ActiveRecord::Schema.define(:version => 20130609174433) do
 
   create_table "event_users", :force => true do |t|
     t.integer  "user_id"
@@ -28,10 +28,9 @@ ActiveRecord::Schema.define(:version => 20130608051803) do
     t.text     "message"
     t.integer  "status",                                               :default => 0
     t.string   "type"
-    t.datetime "trigger_date"
-    t.integer  "trigger_time"
+    t.datetime "trigger_time"
     t.boolean  "send_location",                                        :default => false
-    t.integer  "repeats_on"
+    t.string   "repeats_on_week"
     t.decimal  "lat",                   :precision => 10, :scale => 8
     t.decimal  "lng",                   :precision => 11, :scale => 8
     t.text     "address"
@@ -39,6 +38,28 @@ ActiveRecord::Schema.define(:version => 20130608051803) do
     t.datetime "created_at",                                                              :null => false
     t.datetime "updated_at",                                                              :null => false
   end
+
+  create_table "gcm_devices", :force => true do |t|
+    t.string   "registration_id",    :null => false
+    t.datetime "last_registered_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "gcm_devices", ["registration_id"], :name => "index_gcm_devices_on_registration_id", :unique => true
+
+  create_table "gcm_notifications", :force => true do |t|
+    t.integer  "device_id",        :null => false
+    t.string   "collapse_key"
+    t.text     "data"
+    t.boolean  "delay_while_idle"
+    t.datetime "sent_at"
+    t.integer  "time_to_live"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "gcm_notifications", ["device_id"], :name => "index_gcm_notifications_on_device_id"
 
   create_table "notifications", :force => true do |t|
     t.integer  "event_user_id"

@@ -12,26 +12,32 @@ class Event::TimeBased < AbstractEvent
 
   before_validation :modify_repeates_on_weak
 
-  def self.events_to_trigger(location = false)
+  def self.get_weekday_bit
     time = Time.now()
     time_beginning = time.beginning_of_day()
     minutes = (time.to_i - time_beginning.to_i)/60
     week_array = [0,0,0,0,0,0,0]
     week_array[time.wday] = 1
-    week_number = week_array.join("").to_i(base=2)
 
+    return week_array.join("").to_i(base=2)
+  end
+
+  def self.events_to_trigger(options = {})
+    location = options[:location]
     all_events = self.active
 
     if location
       all_events = all_events.with_location
+      range = (minutes - 5)..(minutes + 5)
     else
       all_events = all_events.without_location
+      range = (minutes - 5)..(minutes + 10)
     end
 
-    all_events.where(trigger_time: (minutes - 5)..(minutes + 10)).where("
+    all_events.where(trigger_time: range).where("
       (repeats_on IS NOT NULL AND (repeats_on & ? != 0)) 
       OR 
-      (repeats_on IS NULL AND trigger_date = ?)", week_number, time_beginning)
+      (repeats_on IS NULL AND trigger_date = ?)", self.get_weekday_bit, Time.now().beginning_of_day())
   end
 
   private

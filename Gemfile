@@ -46,3 +46,5 @@ end
 gem 'devise'
 gem 'exception_notification', :require => 'exception_notifier'
 gem 'geocoder'
+
+gem 'gcm_on_rails'
