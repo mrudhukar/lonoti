@@ -7,10 +7,10 @@
 test_time_event_1: 
   id: 1
   event_id: 1
-  phone_number: 9177023915
-  email: mrudhu@gmail.com
+  phone_number: 121212121
+  email: 1212121@gmail.com
 
 test_time_event_2: 
   id: 2
   event_id: 1
-  phone_number: 8978381829
+  phone_number: 1212121212121212
